@@ -17,3 +17,11 @@ curl --verbose -L --header 'Host: www.solderbyte.com' 'http://localhost/'
 curl --verbose -L --header 'Host: www.jareddlc.com' 'http://localhost/'
 curl --verbose -L --header 'Host: www.siddelacruz.com' 'http://localhost/'
 ```
+
+Updating certs
+
+* Shut down load_balancer service (`$ docker service rm load_balancer`)
+* Run the certbot script (`$ . certbot.sh`)
+* Build the docker image (`$ . docker-build.sh`)
+* Copy the certs (`$ . copy-certs.sh`)
+* Start load_balancer service
