@@ -22,6 +22,6 @@ Updating certs
 
 * Shut down load_balancer service (`$ docker service rm load_balancer`)
 * Run the certbot script (`$ . certbot.sh`)
-* Build the docker image (`$ . docker-build.sh`)
 * Copy the certs (`$ . copy-certs.sh`)
+* Build the docker image (`$ . docker-build.sh`)
 * Start load_balancer service
