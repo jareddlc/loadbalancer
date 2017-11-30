@@ -13,6 +13,10 @@ copy() {
   cp /etc/letsencrypt/live/$1/fullchain.pem $1.fullchain.pem
 }
 
+build() {
+  docker build -t $IMAGE_NAME .
+}
+
 start() {
   docker service create --replicas 1 --name $SERVICE_NAME -p 80:80 -p 443:443 --network $NETWORK_NAME $IMAGE_NAME
 }
@@ -29,6 +33,9 @@ for i in "${!DOMAINS[@]}"; do
   cert "${DOMAINS[$i]}"
   copy "${DOMAINS[$i]}"
 done
+
+# build Service
+build
 
 # start service
 start
