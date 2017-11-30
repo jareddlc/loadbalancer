@@ -8,7 +8,7 @@ Load balancer
 ```
 $ docker build -t loadbalancer .
 $ docker run -d --name load_balancer -p 80:80 -p 443:443 loadbalancer
-$ docker service create --replicas 1 --name load_balancer -p 80:80 -p 443:443 loadbalancer
+$ docker service create --replicas 1 --name load_balancer -p 80:80 -p 443:443 --network my_network loadbalancer
 ```
 
 ```
