@@ -1,13 +1,15 @@
 #!/bin/bash
+DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "jenkins.jareddlc.com")
 
-# From: https://certbot.eff.org/docs/install.html#running-with-docker
+cert() {
+  # From: https://certbot.eff.org/docs/install.html#running-with-docker
+  sudo docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d $1 -d www.$1
+}
 
-
-sudo docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d circuitron.com.mx -d www.circuitron.com.mx
-sudo docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d solderbyte.com -d www.solderbyte.com
-sudo docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d jareddlc.com -d www.jareddlc.com
-sudo docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d siddelacruz.com -d www.siddelacruz.com
-
+# Iterate over domains
+for i in "${!DOMAINS[@]}"; do
+  cert "${DOMAINS[$i]}"
+done
 
 #cert.pem: Your domain's certificate
 #chain.pem: The Let's Encrypt chain certificate

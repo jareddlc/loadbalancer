@@ -2,7 +2,7 @@
 SERVICE_NAME="load_balancer"
 IMAGE_NAME="loadbalancer"
 NETWORK_NAME="my_network"
-DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com")
+DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "jenkins.jareddlc.com")
 
 cert() {
   sudo docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d $1 -d www.$1

@@ -1,13 +1,15 @@
 #!/bin/bash
+DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "jenkins.jareddlc.com")
 
-cp /etc/letsencrypt/live/circuitron.com.mx/privkey.pem .
-cp /etc/letsencrypt/live/circuitron.com.mx/fullchain.pem .
-cp /etc/letsencrypt/live/solderbyte.com/privkey.pem .
-cp /etc/letsencrypt/live/solderbyte.com/fullchain.pem .
-cp /etc/letsencrypt/live/jareddlc.com/privkey.pem .
-cp /etc/letsencrypt/live/jareddlc.com/fullchain.pem .
-cp /etc/letsencrypt/live/siddelacruz.com/privkey.pem .
-cp /etc/letsencrypt/live/siddelacruz.com/fullchain.pem .
+copy() {
+  cp /etc/letsencrypt/live/$1/privkey.pem $1.privkey.pem
+  cp /etc/letsencrypt/live/$1/fullchain.pem $1.fullchain.pem
+}
+
+# Iterate over domains
+for i in "${!DOMAINS[@]}"; do
+  copy "${DOMAINS[$i]}"
+done
 
 #sudo chmod -R 600 privkey.pem
 #sudo chmod -R 600 fullchain.pem

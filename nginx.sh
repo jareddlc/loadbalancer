@@ -1,5 +1,6 @@
 #!/bin/bash
 FILE_NAME="nginx.conf"
+UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com" "jenkins") # docker service names
 DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "jenkins.jareddlc.com")
 DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com" "www.jenkins.jareddlc.com")
 PORTS=("8080" "8080" "80" "8080" "8080")
@@ -84,7 +85,6 @@ httpsServer() {
   echo "    ssl_session_cache shared:SSL:10m;" >> $FILE_NAME
   echo "    ssl_stapling on;" >> $FILE_NAME
   echo "    ssl_stapling_verify on;" >> $FILE_NAME
-  echo "    ssl_session_timeout 1d;" >> $FILE_NAME
   echo "    add_header Strict-Transport-Security max-age=15768000;" >> $FILE_NAME
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
@@ -103,9 +103,9 @@ httpsServer() {
 echo "$NGINX_OPTS" > $FILE_NAME
 echo "$START" >> $FILE_NAME
 
-# Iterate over domains
-for i in "${!DOMAINS[@]}"; do
-  upstream "${DOMAINS[$i]}" "${PORTS[$i]}"
+# Iterate over upstreams
+for i in "${!UPSTREAMS[@]}"; do
+  upstream "${UPSTREAMS[$i]}" "${PORTS[$i]}"
 done
 
 echo "$HTTPS_LOG_OPTS" >> $FILE_NAME
@@ -113,8 +113,8 @@ echo "$HTTP_OPTS" >> $FILE_NAME
 
 # Iterate over domains
 for i in "${!DOMAINS[@]}"; do
-  httpServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${DOMAINS[$i]}-upstream"
-  httpsServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${DOMAINS[$i]}-upstream" "/etc/nginx/ssl/${DOMAINS[$i]}.fullchain.pem" "/etc/nginx/ssl/${DOMAINS[$i]}.privkey.pem"
+  httpServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream"
+  httpsServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream" "/etc/nginx/ssl/${DOMAINS[$i]}.fullchain.pem" "/etc/nginx/ssl/${DOMAINS[$i]}.privkey.pem"
 done
 
 echo "$STOP" >> $FILE_NAME
