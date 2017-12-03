@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:alpine
 MAINTAINER Jared De La Cruz "jared@jareddlc.com"
 
 # Move config
