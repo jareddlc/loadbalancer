@@ -6,20 +6,20 @@ DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "w
 PORTS=("8080" "8080" "80" "8080" "8080")
 SITES=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com")
 
-
-NGINX_OPTS="
-user  nginx;
+NGINX_OPTS="user  nginx;
 worker_processes  1;
 
 events {
   worker_connections  1024;
 }
+
 error_log  /var/log/nginx/error.log warn;
 pid        /var/run/nginx.pid;
 "
-
-HTTPS_LOG_OPTS='log_format  main $remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for";'
-HTTP_OPTS="
+HTTP_START="http {"
+HTTP_STOP="}"
+HTTP_OPTS='
+  log_format  main $remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for";
   access_log  /var/log/nginx/access.log  main;
 
   sendfile on;
@@ -27,10 +27,12 @@ HTTP_OPTS="
 
   include       /etc/nginx/mime.types;
   default_type  application/octet-stream;
-"
 
-START="http {"
-STOP="}"
+  gzip            on;
+  gzip_min_length 1000;
+  gzip_proxied    expired no-cache no-store private auth;
+  gzip_types      text/plain text/html text/css;
+'
 
 # Generates an nginx upstream
 # name - name of the upstream
@@ -86,23 +88,24 @@ httpsServer() {
   echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
   echo "    }" >> $FILE_NAME
   echo "  }" >> $FILE_NAME
+  echo "" >> $FILE_NAME
 }
 
+# Generate nginx.conf
 echo "$NGINX_OPTS" > $FILE_NAME
-echo "$START" >> $FILE_NAME
+echo "$HTTP_START" >> $FILE_NAME
 
-# Iterate over upstreams
+# upstreams
 for i in "${!UPSTREAMS[@]}"; do
   upstream "${UPSTREAMS[$i]}" "${PORTS[$i]}"
 done
 
-echo "$HTTPS_LOG_OPTS" >> $FILE_NAME
 echo "$HTTP_OPTS" >> $FILE_NAME
 
-# Iterate over domains
+# http & https
 for i in "${!DOMAINS[@]}"; do
   httpServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream"
   httpsServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream" "/etc/nginx/ssl/${DOMAINS[$i]}.fullchain.pem" "/etc/nginx/ssl/${DOMAINS[$i]}.privkey.pem"
 done
 
-echo "$STOP" >> $FILE_NAME
+echo "$HTTP_STOP" >> $FILE_NAME
