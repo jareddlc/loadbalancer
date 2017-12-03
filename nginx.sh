@@ -52,13 +52,8 @@ httpServer() {
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
   echo "      proxy_pass http://$3;" >> $FILE_NAME
-  echo "      proxy_intercept_errors on;" >> $FILE_NAME
-  echo "      proxy_http_version 1.1;" >> $FILE_NAME
-  echo '      proxy_set_header Upgrade $http_upgrade;' >> $FILE_NAME
-  echo '      proxy_set_header Connection "upgrade";' >> $FILE_NAME
   echo '      proxy_set_header Host $host;' >> $FILE_NAME
   echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
-  echo '      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> $FILE_NAME
   echo "    }" >> $FILE_NAME
   echo "  }" >> $FILE_NAME
   echo "" >> $FILE_NAME
@@ -89,13 +84,8 @@ httpsServer() {
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
   echo "      proxy_pass http://$3;" >> $FILE_NAME
-  echo "      proxy_intercept_errors on;" >> $FILE_NAME
-  echo "      proxy_http_version 1.1;" >> $FILE_NAME
-  echo '      proxy_set_header Upgrade $http_upgrade;' >> $FILE_NAME
-  echo '      proxy_set_header Connection "upgrade";' >> $FILE_NAME
   echo '      proxy_set_header Host $host;' >> $FILE_NAME
   echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
-  echo '      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> $FILE_NAME
   echo "    }" >> $FILE_NAME
   echo "  }" >> $FILE_NAME
 }
