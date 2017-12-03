@@ -4,7 +4,6 @@ UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com"
 DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "jenkins.jareddlc.com")
 DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com" "www.jenkins.jareddlc.com")
 PORTS=("8080" "8080" "80" "8080" "8080")
-SITES=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com")
 
 NGINX_OPTS="user  nginx;
 worker_processes  1;
@@ -30,8 +29,8 @@ HTTP_OPTS='
 
   gzip            on;
   gzip_min_length 1000;
-  gzip_proxied    expired no-cache no-store private auth;
-  gzip_types      text/plain text/html text/css application/javascript;
+  gzip_proxied    any;
+  gzip_types      text/plain text/html text/css application/javascript application/xhtml+xml application/xml image/webp image/apng image/svg+xml;
 '
 
 # Generates an nginx upstream
