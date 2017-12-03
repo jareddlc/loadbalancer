@@ -31,7 +31,7 @@ HTTP_OPTS='
   gzip            on;
   gzip_min_length 1000;
   gzip_proxied    expired no-cache no-store private auth;
-  gzip_types      text/plain text/html text/css;
+  gzip_types      text/plain text/html text/css application/javascript;
 '
 
 # Generates an nginx upstream
@@ -86,6 +86,10 @@ httpsServer() {
   echo '      proxy_http_version 1.1;' >> $FILE_NAME
   echo '      proxy_set_header Host $host;' >> $FILE_NAME
   echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
+  echo "    }" >> $FILE_NAME
+  echo "" >> $FILE_NAME
+  echo "    location ~*  \.(jpg|jpeg|png|gif|ico|svg|mp4|css|js)$ {" >> $FILE_NAME
+  echo "      expires 7d;" >> $FILE_NAME
   echo "    }" >> $FILE_NAME
   echo "  }" >> $FILE_NAME
   echo "" >> $FILE_NAME
