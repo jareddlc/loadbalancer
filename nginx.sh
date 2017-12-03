@@ -48,12 +48,11 @@ upstream() {
 httpServer() {
   echo "  server {" >> $FILE_NAME
   echo "    listen 80;" >> $FILE_NAME
+  echo "    listen [::]:80;" >> $FILE_NAME
   echo "    server_name $1 $2;" >> $FILE_NAME
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
-  echo "      proxy_pass http://$3;" >> $FILE_NAME
-  echo '      proxy_set_header Host $host;' >> $FILE_NAME
-  echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
+  echo "      return 301 https://$server_name$request_uri;" >> $FILE_NAME
   echo "    }" >> $FILE_NAME
   echo "  }" >> $FILE_NAME
   echo "" >> $FILE_NAME
@@ -68,6 +67,7 @@ httpServer() {
 httpsServer() {
   echo "  server {" >> $FILE_NAME
   echo "    listen 443 ssl http2;" >> $FILE_NAME
+  echo "    listen [::]:443 ssl http2;" >> $FILE_NAME
   echo "    server_name $1 $2;" >> $FILE_NAME
   echo "" >> $FILE_NAME
   echo "    ssl on;" >> $FILE_NAME
@@ -78,12 +78,10 @@ httpsServer() {
   echo '    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";' >> $FILE_NAME
   echo "    ssl_session_timeout 1d;" >> $FILE_NAME
   echo "    ssl_session_cache shared:SSL:10m;" >> $FILE_NAME
-  echo "    ssl_stapling on;" >> $FILE_NAME
-  echo "    ssl_stapling_verify on;" >> $FILE_NAME
-  echo "    add_header Strict-Transport-Security max-age=15768000;" >> $FILE_NAME
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
   echo "      proxy_pass http://$3;" >> $FILE_NAME
+  echo '      proxy_http_version 1.1;' >> $FILE_NAME
   echo '      proxy_set_header Host $host;' >> $FILE_NAME
   echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
   echo "    }" >> $FILE_NAME
