@@ -52,7 +52,7 @@ httpServer() {
   echo "    server_name $1 $2;" >> $FILE_NAME
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
-  echo "      return 301 https://$server_name$request_uri;" >> $FILE_NAME
+  echo '      return 301 https://$server_name$request_uri;' >> $FILE_NAME
   echo "    }" >> $FILE_NAME
   echo "  }" >> $FILE_NAME
   echo "" >> $FILE_NAME
