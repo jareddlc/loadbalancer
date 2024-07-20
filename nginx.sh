@@ -1,8 +1,8 @@
 #!/bin/bash
 FILE_NAME="nginx.conf"
-UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com" "jenkins") # docker service names
-DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "jenkins.jareddlc.com")
-DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com" "www.jenkins.jareddlc.com")
+UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com") # docker service names
+DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com")
+DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com")
 PORTS=("8080" "8080" "80" "8080" "8080")
 
 NGINX_OPTS="user  nginx;
@@ -79,6 +79,11 @@ httpsServer() {
   echo '    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";' >> $FILE_NAME
   echo "    ssl_session_timeout 1d;" >> $FILE_NAME
   echo "    ssl_session_cache shared:SSL:10m;" >> $FILE_NAME
+  echo "" >> $FILE_NAME
+  echo "    location '/.well-known/acme-challenge' {" >> $FILE_NAME
+  echo '      default_type "text/plain";' >> $FILE_NAME
+  echo "      proxy_pass http://$3;" >> $FILE_NAME
+  echo "    }" >> $FILE_NAME
   echo "" >> $FILE_NAME
   echo "    location / {" >> $FILE_NAME
   echo "      proxy_pass http://$3;" >> $FILE_NAME

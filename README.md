@@ -16,8 +16,11 @@ curl --verbose -L --header 'Host: www.circuitron.com.mx' 'http://localhost/'
 curl --verbose -L --header 'Host: www.solderbyte.com' 'http://localhost/'
 curl --verbose -L --header 'Host: www.jareddlc.com' 'http://localhost/'
 curl --verbose -L --header 'Host: www.siddelacruz.com' 'http://localhost/'
-curl --verbose -L --header 'Host: www.jenkins.jareddlc.com' 'http://localhost/'
 ```
+
+Generate Nginx conf
+
+`$ . nginx.sh`
 
 Updating certs
 
