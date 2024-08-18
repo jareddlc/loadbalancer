@@ -3,7 +3,8 @@ FILE_NAME="nginx.conf"
 UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com" "housecollectiverecords_com") # docker service names
 DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "housecollectiverecords.com")
 DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com" "www.housecollectiverecords.com")
-PORTS=("8080" "8080" "80" "8080" "8080" "80")
+PORTS=("8080" "8080" "80" "8080" "80")
+HTTPS=(1 1 1 1 0)
 
 NGINX_OPTS="user  nginx;
 worker_processes  1;
@@ -103,6 +104,34 @@ httpsServer() {
   echo "" >> $FILE_NAME
 }
 
+# Generates an nginx http server (no-ssl, no-redirect)
+# domain - name of domain
+# domain_www - alternative name of domain
+# upstream - name of the upstream
+httpServerNoSSL() {
+  echo "  server {" >> $FILE_NAME
+  echo "    listen 80;" >> $FILE_NAME
+  echo "    listen [::]:80;" >> $FILE_NAME
+  echo "    server_name $1 $2;" >> $FILE_NAME
+  echo "" >> $FILE_NAME
+  echo "    location / {" >> $FILE_NAME
+  echo "      proxy_pass http://$3;" >> $FILE_NAME
+  echo '      proxy_http_version 1.1;' >> $FILE_NAME
+  echo '      proxy_set_header Host $host;' >> $FILE_NAME
+  echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
+  echo "    }" >> $FILE_NAME
+  echo "" >> $FILE_NAME
+  echo "    location ~*  \.(jpg|jpeg|png|gif|ico|svg|mp4|css|js)$ {" >> $FILE_NAME
+  echo "      proxy_pass http://$3;" >> $FILE_NAME
+  echo '      proxy_http_version 1.1;' >> $FILE_NAME
+  echo '      proxy_set_header Host $host;' >> $FILE_NAME
+  echo '      proxy_set_header X-Real-IP $remote_addr;' >> $FILE_NAME
+  echo "      expires 7d;" >> $FILE_NAME
+  echo "    }" >> $FILE_NAME
+  echo "  }" >> $FILE_NAME
+  echo "" >> $FILE_NAME
+}
+
 # Generate nginx.conf
 echo "$NGINX_OPTS" > $FILE_NAME
 echo "$HTTP_START" >> $FILE_NAME
@@ -116,8 +145,12 @@ echo "$HTTP_OPTS" >> $FILE_NAME
 
 # http & https
 for i in "${!DOMAINS[@]}"; do
-  httpServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream"
-  httpsServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream" "/etc/nginx/ssl/${DOMAINS[$i]}.fullchain.pem" "/etc/nginx/ssl/${DOMAINS[$i]}.privkey.pem"
+  if [[ "${HTTPS[$i]}" == 1 ]]; then
+    httpServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream"
+    httpsServer "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream" "/etc/nginx/ssl/${DOMAINS[$i]}.fullchain.pem" "/etc/nginx/ssl/${DOMAINS[$i]}.privkey.pem"
+  else
+    httpServerNoSSL "${DOMAINS[$i]}" "${DOMAINS_WWW[$i]}" "${UPSTREAMS[$i]}-upstream"
+  fi
 done
 
 echo "$HTTP_STOP" >> $FILE_NAME
