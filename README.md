@@ -8,7 +8,7 @@ Load balancer
 ```
 $ docker build -t loadbalancer .
 $ docker run -d --name load_balancer -p 80:80 -p 443:443 loadbalancer
-$ docker service create --replicas 1 --name load_balancer -p 80:80 -p 443:443 --network my_network loadbalancer
+$ docker service create --replicas 1 --name load_balancer -p 80:80 -p 443:443 --network lb_network loadbalancer
 ```
 
 ```
@@ -16,6 +16,7 @@ curl --verbose -L --header 'Host: www.circuitron.com.mx' 'http://localhost/'
 curl --verbose -L --header 'Host: www.solderbyte.com' 'http://localhost/'
 curl --verbose -L --header 'Host: www.jareddlc.com' 'http://localhost/'
 curl --verbose -L --header 'Host: www.siddelacruz.com' 'http://localhost/'
+curl --verbose -L --header 'Host: www.housecollectiverecords.com' 'http://localhost/'
 ```
 
 Generate Nginx conf

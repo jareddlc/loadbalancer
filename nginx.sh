@@ -1,9 +1,9 @@
 #!/bin/bash
 FILE_NAME="nginx.conf"
-UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com") # docker service names
-DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com")
-DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com")
-PORTS=("8080" "8080" "80" "8080" "8080")
+UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com" "housecollectiverecords_com") # docker service names
+DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "housecollectiverecords.com")
+DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com" "www.housecollectiverecords.com")
+PORTS=("8080" "8080" "80" "8080" "8080" "80")
 
 NGINX_OPTS="user  nginx;
 worker_processes  1;
