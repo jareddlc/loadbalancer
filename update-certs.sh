@@ -39,3 +39,5 @@ done
 
 # start service
 #start
+
+# docker run -it --rm -p 443:443 -p 80:80 --name certbot -v "/etc/letsencrypt:/etc/letsencrypt" -v "/var/lib/letsencrypt:/var/lib/letsencrypt" quay.io/letsencrypt/letsencrypt:latest certonly --standalone -d housecollectiverecords.com -d www.housecollectiverecords.com

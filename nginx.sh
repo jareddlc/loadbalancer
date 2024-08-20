@@ -4,7 +4,7 @@ UPSTREAMS=("circuitron_com_mx" "jareddlc_com" "siddelacruz_com" "solderbyte_com"
 DOMAINS=("circuitron.com.mx" "jareddlc.com" "siddelacruz.com" "solderbyte.com" "housecollectiverecords.com")
 DOMAINS_WWW=("www.circuitron.com.mx" "www.jareddlc.com" "www.siddelacruz.com" "www.solderbyte.com" "www.housecollectiverecords.com")
 PORTS=("8080" "8080" "80" "8080" "80")
-HTTPS=(1 1 1 1 0)
+HTTPS=(1 1 1 1 1)
 
 NGINX_OPTS="user  nginx;
 worker_processes  1;
